@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { TextField, Button, Typography, Paper } from '@mui/material';
 import FileBase from 'react-file-base64';
+import { useDispatch } from 'react-redux';
 
 import './form.css';
+
+import { createPost } from '../../actions/posts'; 
 
 function Form() {
     const [postData, setPostData] = useState({
@@ -13,8 +16,12 @@ function Form() {
         selectedFile: '',
     });
 
-    function handleSubmit() {
+    const dispatch = useDispatch();
 
+    function handleSubmit(e) {
+        e.preventDefault();
+
+        dispatch(createPost(postData));
     };
 
     function Clear() {
@@ -26,7 +33,7 @@ function Form() {
             <form autoComplete='off' noValidate className='form root' onSubmit={handleSubmit}>
                 <Typography variant='h6'> Creating a Memory </Typography>
                 <TextField 
-                    name='creator' 
+                    name='creator'
                     variant='outlined' 
                     label="Creator" 
                     fullWidth 
@@ -39,15 +46,17 @@ function Form() {
                     label="Title" 
                     fullWidth 
                     value={postData.title} 
-                    onChange={(e) => setPostData({ ...postData, creator: e.target.value })}
+                    onChange={(e) => setPostData({ ...postData, title: e.target.value })}
                 />
                 <TextField 
                     name='message' 
                     variant='outlined' 
-                    label="Message" 
+                    label="Message"
+                    multiline
+                    rows={4}
                     fullWidth 
                     value={postData.message} 
-                    onChange={(e) => setPostData({ ...postData, creator: e.target.value })}
+                    onChange={(e) => setPostData({ ...postData, message: e.target.value })}
                 />
                 <TextField 
                     name='tags' 
@@ -55,7 +64,7 @@ function Form() {
                     label="Tags" 
                     fullWidth 
                     value={postData.tags} 
-                    onChange={(e) => setPostData({ ...postData, creator: e.target.value })}
+                    onChange={(e) => setPostData({ ...postData, tags: e.target.value })}
                 />
                 <div className='file-input'> <FileBase 
                     type='file' 
